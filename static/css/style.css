@@ -1,0 +1,139 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial;
+    background-image: url('background.png');
+    background-size: auto;
+    background-repeat: no-repeat;
+    color: #000b47;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+h3 {
+    margin-top: 20px;
+    text-indent: 30px;
+}
+
+p {
+    text-indent: 60px;
+    margin-bottom: 10px;
+}
+
+.container {
+    max-width: 1200px;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(5px);
+}
+
+.subcontainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 50px;
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #000b47;
+}
+
+h3 {
+    margin-bottom: 5px;
+}
+
+.clock {
+    margin-top: 0.5%;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.clock-display {
+    font-size: 5rem;
+    color: #000b47;
+}
+
+.weather {
+    margin-bottom: 20px;
+}
+
+.weather-forecast {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+.weather-forecast-item {
+    color: #333;
+    padding: 10px;
+    backdrop-filter: blur(25px);
+    border-radius: 10px;
+    text-align: center;
+
+}
+
+.comparison {
+    margin-bottom: 100%;
+    justify-content: space-evenly;
+}
+
+.comparison-item {
+    color: #222;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.comparison-item img {
+    display: inline;
+    margin-left: 20px;
+    margin-right: 20px;
+    max-width: 40%;
+    height: auto;
+}
+
+.task-list {
+    color: #222;
+    counter-reset: li;
+    list-style-type: none;
+    padding: 0;
+    margin-left: 20px;
+    border: 1px dotted #E3E0EA;
+    backdrop-filter: blur(25px);
+    border-radius: 15px;
+    margin-top: 40px;
+}
+
+.task-list > li {
+    counter-increment: li;
+    position: relative;
+    padding-left: 2.5em;
+    margin-bottom: 2em;
+}
+
+.task-list > li:before {
+    content: counter(li);
+    position: absolute;
+    left: -1.3em;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #E3E0EA;
+    height: 2em;
+    width: 2em;
+    line-height: 2em;
+    border: .3em solid rgba(255, 255, 255, 0.5);
+    text-align: center;
+    font-weight: bold;
+    border-radius: 2em;
+    color: #000b47;
+}

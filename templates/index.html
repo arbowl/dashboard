@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" >
+</head>
+<body>
+    <div class="container">
+        <div class="clock">
+            <div id="clockDisplay" class="clock-display">
+                <!-- Clock will be updated dynamically -->
+            </div>
+        </div>
+
+        <div class="weather">
+            <h2>Weather Forecast</h2>
+            <div id="weatherForecast" class="weather-forecast">
+                <!-- Weather forecast data will be loaded dynamically -->
+            </div>
+        </div>
+        <div class="subcontainer">
+            <div class="comparison">
+                <h2>Mood Forecast</h2>
+                <div class="comparison-grid">
+                    <!-- Sleep and recovery PNGs for people will be loaded dynamically -->
+                    <!-- Example structure for one comparison:
+                    <div class="comparison-item">
+                        <img src="path_to_sleep_person1.png" alt="Person 1 Sleep">
+                        <img src="path_to_recovery_person1.png" alt="Person 1 Recovery">
+                    </div>
+                    -->
+                </div>
+            </div>
+            <div class="comparison">
+                <h2>Tasks</h2>
+                <div id="taskGrid" class="task-grid">
+                    <!-- Train data will be loaded dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}" ></script>
+</body>
+</html>
