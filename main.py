@@ -1,4 +1,18 @@
-"""Main"""
+"""Dashboard
+
+This is a simple web app for personal use that displays on a coffee stand in my
+apartment. It runs on a Raspberry Pi 3B+ and outputs to an old screen via HDMI.
+
+It requires an .env file with the following fields:
+- ZIP
+- WEATHER_API
+- <user 1>_USERNAME
+- <user 1>_PASSWORD
+- <user 2>_USERNAME
+- <user 2>_PASSWORD
+
+For <user 1>/<user 2>, their name must be in the "USERS" list.
+"""
 
 from __future__ import annotations
 
@@ -9,6 +23,7 @@ from os import getenv, getcwd
 from os.path import join
 from typing import Optional
 
+from dotenv import load_dotenv
 from flask import Flask, jsonify, render_template, request
 from matplotlib.axes import Axes
 import matplotlib.pyplot as plt  # type: ignore
@@ -17,10 +32,13 @@ from numpy import pi, inf
 from requests import get
 from whoop import WhoopClient
 
+load_dotenv()
+
 app = Flask(__name__)
 
-ZIP = "02466"
-USERS = ["Drew", "Drew"]
+
+USERS = ["Drew"]
+ZIP = getenv("ZIP")
 START_RGB = "#FF0000"
 CROSS_RGB = "#FFFF00"
 FINAL_RGB = "#06B025"
@@ -73,8 +91,8 @@ class WhoopUser:
         """Returns a JSON containing the user data"""
         return {
             "name": self.name,
-            "sleepImage": f"http://{request.host}/static/img/{self.name.lower()}_"\
-            "sleep.png",
+            "sleepImage": f"http://{request.host}/static/img/{self.name.lower()}"\
+            "_sleep.png",
             "recoveryImage": f"http://{request.host}/static/img/{self.name.lower()}"\
             "_recovery.png",
         }
@@ -171,7 +189,7 @@ class WhoopUser:
 
 
 @app.route("/")
-def index():
+def index() -> str:
     """Homepage"""
     return render_template("index.html")
 
@@ -185,41 +203,45 @@ def get_weather():
     weather = get(url, timeout=5)
     weather.raise_for_status()
     data = weather.json()
-    hi, lo = 0, inf
     forecast = []
+    descriptions = []
+    hi, lo = -math.inf, math.inf
     # 5 day forecast with 3 hour intervals = 8 intervals per day
     for i in range(0, 5 * 8):
         timestamp = data["list"][i]["dt"]
         day_of_week = datetime.fromtimestamp(timestamp).strftime("%A")
-        weather_description: str = data["list"][i]["weather"][0]["description"]
+        weather_description = data["list"][i]["weather"][0]["description"]
         low_temp = data["list"][i]["main"]["temp_min"]
-        lo = min(lo, low_temp)
         high_temp = data["list"][i]["main"]["temp_max"]
-        hi = max(hi, high_temp)
         icon = data["list"][i]["weather"][0]["icon"]
-        if i % 8 == 0:
+        lo = min(lo, low_temp)
+        hi = max(hi, high_temp)
+        descriptions.append(weather_description)
+        if (i + 1) % 8 == 0:
+            midday_description = descriptions[4]
             forecast.append(
                 {
                     "date": day_of_week,
-                    "description": weather_description.title(),
+                    "description": midday_description.title(),
                     "low_temp": f"{round(lo)}°F",
                     "high_temp": f"{round(hi)}°F",
                     "icon_code": icon,
                 }
             )
-            hi, lo = 0, inf
+            hi, lo = -math.inf, math.inf
+            descriptions = []
     return jsonify(forecast)
 
 
 @app.route("/comparison")
-def comparison():
+def comparison() -> dict:
     """Returns WHOOP comparison data"""
     json_data = [user.data for user in clients]
     return jsonify(json_data)
 
 
 @app.route("/tasks")
-def show_tasks():
+def show_tasks() -> dict:
     """Returns tasks from the local server"""
     tasks: list[str] = []
     response = get("http://192.168.0.156:5000/retrieve", timeout=5)
